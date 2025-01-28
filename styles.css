@@ -1,0 +1,327 @@
+/* styles.css */
+
+:root {
+    --primary: #4A90E2;
+    --primary-dark: #357ABD;
+    --secondary: #FF6B6B;
+    --success: #2ECC71;
+    --background: #F0F4F8;
+    --text: #2C3E50;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --transition: all 0.3s ease;
+  }
+  
+  /* Reset & Base Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  
+  /* Accessibility */
+  .screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  
+  /* Layout Components */
+  .game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  /* Welcome Screen */
+  .welcome-screen {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
+  }
+  
+  .welcome-title {
+    font-size: 3.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    animation: bounce 1s infinite;
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: 2rem;
+  }
+  
+  /* Mode Selection */
+  .mode-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .mode-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: var(--radius-md);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 4px solid transparent;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .mode-card:hover,
+  .mode-card:focus {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .mode-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    transition: var(--transition);
+  }
+  
+  .mode-card:hover .mode-icon {
+    transform: scale(1.1);
+  }
+  
+  .mode-title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+    font-weight: 700;
+  }
+  
+  /* Game Area */
+  .game-area {
+    display: none;
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .emotion-display {
+    font-size: 10rem;
+    margin: 2rem 0;
+    animation: pulse 2s infinite;
+    text-shadow: var(--shadow-md);
+  }
+  
+  /* Options Grid */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  .option-button {
+    padding: 1.5rem 2rem;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    background: white;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+  
+  .option-button:hover,
+  .option-button:focus {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-lg);
+    outline: 3px solid var(--primary);
+  }
+  
+  .option-button i {
+    color: var(--primary);
+  }
+  
+  /* Progress Bar */
+  .progress-bar {
+    height: 12px;
+    background: #eee;
+    border-radius: 6px;
+    margin: 2rem 0;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 6px;
+  }
+  
+  /* Feedback */
+  .feedback {
+    font-size: 1.75rem;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: var(--radius-md);
+    animation: fadeIn 0.5s;
+    font-weight: 600;
+  }
+  
+  /* Settings Panel */
+  .settings-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .settings-button {
+    font-size: 1.25rem;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .settings-button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+  }
+  
+  /* Celebration Effects */
+  .celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+  }
+  
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+    animation: fall 3s linear infinite;
+  }
+  
+  /* Animations */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fall {
+    0% { transform: translateY(-100vh) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+  
+  /* Accessibility Features */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .game-container {
+      padding: 1rem;
+    }
+  
+    .welcome-title {
+      font-size: 2.5rem;
+    }
+  
+    .emotion-display {
+      font-size: 6rem;
+    }
+  
+    .option-button {
+      font-size: 1.25rem;
+      padding: 1.25rem;
+    }
+  
+    .settings-panel {
+      top: auto;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+  
+  /* High Contrast Mode */
+  .high-contrast {
+    --primary: #000000;
+    --secondary: #FFFFFF;
+    --text: #000000;
+    --background: #FFFFFF;
+  }
+  
+  /* Large Text Mode */
+  .large-text {
+    font-size: 120%;
+  }

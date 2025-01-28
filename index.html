@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Accessible gaming hub featuring educational and therapeutic games for various needs">
+    <title>Inclusive Games Hub | Educational & Therapeutic Games</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb, #2575fc);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-color: #fff;
+            --hover-bg: rgba(255, 255, 255, 0.95);
+            --hover-text: #2575fc;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            text-align: center;
+            background: var(--primary-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--text-color);
+            color: var(--hover-text);
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .game-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .game-link:focus {
+            outline: 3px solid #fff;
+            border-radius: 8px;
+        }
+
+        .icon-wrapper {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .game-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .games-grid {
+                gap: 1rem;
+            }
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-gradient: #000;
+                --card-bg: #333;
+                --text-color: #fff;
+                --hover-bg: #fff;
+                --hover-text: #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+    <main id="main" class="container" role="main">
+        <h1>Welcome to the Inclusive Games Hub</h1>
+        <p class="subtitle">Explore our collection of accessible and educational games designed for everyone</p>
+        
+        <div class="games-grid">
+            <article class="game-card">
+                <a href="emotion-explorer.html" class="game-link" aria-label="Play Emotion Explorer - A game for understanding emotions">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <h2 class="game-title">Emotion Explorer</h2>
+                    <p class="game-description">Learn to recognize and understand emotions through interactive activities</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="hero-hands.html" class="game-link" aria-label="Play Hero Hands - A game for motor skill development">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h2 class="game-title">Hero Hands</h2>
+                    <p class="game-description">Develop fine motor skills through engaging superhero-themed exercises</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="sound-quest.html" class="game-link" aria-label="Play Sound Quest - An audio-based adventure game">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h2 class="game-title">Sound Quest</h2>
+                    <p class="game-description">Navigate through exciting audio adventures with rich sound design</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="word-warrior.html" class="game-link" aria-label="Play Word Warrior - A game for reading improvement">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h2 class="game-title">Word Warrior</h2>
+                    <p class="game-description">Master reading skills with adaptive learning technology</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="focus-frenzy.html" class="game-link" aria-label="Play Focus Frenzy - A game for attention training">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h2 class="game-title">Focus Frenzy</h2>
+                    <p class="game-description">Build concentration skills through fun, engaging challenges</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="sign-it.html" class="game-link" aria-label="Play Sign It - Learn sign language through games">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-hands"></i>
+                    </div>
+                    <h2 class="game-title">Sign It!</h2>
+                    <p class="game-description">Learn sign language basics through interactive lessons</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="balance-builder.html" class="game-link" aria-label="Play Balance Builder - A game for coordination">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h2 class="game-title">Balance Builder</h2>
+                    <p class="game-description">Improve coordination through balanced movement activities</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="speak-spell.html" class="game-link" aria-label="Play Speak & Spell Adventures - A speech development game">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h2 class="game-title">Speak & Spell Adventures</h2>
+                    <p class="game-description">Practice speech and spelling in an adventure-filled world</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="calm-island.html" class="game-link" aria-label="Play Calm Island - A relaxation and mindfulness game">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h2 class="game-title">Calm Island</h2>
+                    <p class="game-description">Practice mindfulness and relaxation techniques</p>
+                </a>
+            </article>
+
+            <article class="game-card">
+                <a href="everyday-hero.html" class="game-link" aria-label="Play Everyday Hero - Life skills development game">
+                    <div class="icon-wrapper" aria-hidden="true">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h2 class="game-title">Everyday Hero</h2>
+                    <p class="game-description">Learn life skills through fun daily activities</p>
+                </a>
+            </article>
+        </div>
+    </main>
+</body>
+</html>

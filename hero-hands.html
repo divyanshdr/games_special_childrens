@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hero Hands Enhanced</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #FFD700;
+            --danger-color: #FF6B6B;
+            --background-color: #87CEEB;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--background-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            touch-action: none;
+            overflow: hidden;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+        }
+
+        #hero {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            touch-action: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            color: white;
+            user-select: none;
+            z-index: 100;
+            transition: transform 0.1s;
+        }
+
+        #hero:active {
+            transform: scale(0.95);
+        }
+
+        .target {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--danger-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #gameStats {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        #score, #timeLeft, #highScore {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #startScreen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .game-title {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #gameOver {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+            color: white;
+        }
+
+        .powerup {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            animation: float 2s infinite;
+            z-index: 90;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .combo-text {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            pointer-events: none;
+            animation: fadeUp 1s forwards;
+        }
+
+        @keyframes fadeUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="gameStats">
+            <div id="score">Score: 0</div>
+            <div id="timeLeft">Time: 60s</div>
+            <div id="highScore">Best: 0</div>
+        </div>
+        
+        <div id="startScreen">
+            <h1 class="game-title">🎮 Hero Hands</h1>
+            <div class="button-container">
+                <button id="easyMode">Easy Mode</button>
+                <button id="normalMode">Normal Mode</button>
+                <button id="hardMode">Challenge Mode</button>
+            </div>
+        </div>
+
+        <div id="gameOver">
+            <h2>Game Over!</h2>
+            <p id="finalScore">Final Score: 0</p>
+            <button id="restartButton">Play Again</button>
+        </div>
+
+        <div id="hero">👋</div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const hero = document.getElementById('hero');
+        const scoreElement = document.getElementById('score');
+        const timeLeftElement = document.getElementById('timeLeft');
+        const highScoreElement = document.getElementById('highScore');
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+        const restartButton = document.getElementById('restartButton');
+
+        // Game state
+        let gameState = {
+            score: 0,
+            timeLeft: 60,
+            highScore: localStorage.getItem('highScore') || 0,
+            gameActive: false,
+            combo: 0,
+            lastTargetTime: 0,
+            powerups: [],
+            targets: []
+        };
+
+        // Game configuration
+        const gameConfig = {
+            easy: {
+                targetSize: 80,
+                targetSpeed: 2500,
+                heroSize: 80,
+                maxTargets: 2,
+                timeBonus: 3
+            },
+            normal: {
+                targetSize: 60,
+                targetSpeed: 2000,
+                heroSize: 70,
+                maxTargets: 3,
+                timeBonus: 2
+            },
+            hard: {
+                targetSize: 50,
+                targetSpeed: 1500,
+                heroSize: 60,
+                maxTargets: 4,
+                timeBonus: 1
+            }
+        };
+
+        let currentConfig = gameConfig.normal;
+
+        // Initialize event listeners
+        document.querySelectorAll('#startScreen button').forEach(button => {
+            button.addEventListener('click', () => {
+                const mode = button.id.replace('Mode', '');
+                currentConfig = gameConfig[mode.toLowerCase()];
+                startGame();
+            });
+        });
+
+        restartButton.addEventListener('click', () => {
+            gameOverScreen.style.display = 'none';
+            startScreen.style.display = 'flex';
+        });
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameState = {
+                ...gameState,
+                score: 0,
+                timeLeft: 60,
+                gameActive: true,
+                combo: 0,
+                targets: []
+            };
+            
+            updateUI();
+            startGameTimer();
+            createTarget();
+        }
+
+        function endGame() {
+            gameState.gameActive = false;
+            if (gameState.score > gameState.highScore) {
+                gameState.highScore = gameState.score;
+                localStorage.setItem('highScore', gameState.highScore);
+            }
+            finalScoreElement.textContent = `Final Score: ${gameState.score}`;
+            gameOverScreen.style.display = 'flex';
+            clearTargets();
+        }
+
+        function startGameTimer() {
+            const timer = setInterval(() => {
+                if (!gameState.gameActive) {
+                    clearInterval(timer);
+                    return;
+                }
+
+                gameState.timeLeft--;
+                timeLeftElement.textContent = `Time: ${gameState.timeLeft}s`;
+
+                if (gameState.timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function createTarget() {
+            if (!gameState.gameActive || gameState.targets.length >= currentConfig.maxTargets) return;
+
+            const target = document.createElement('div');
+            target.className = 'target';
+            target.innerHTML = '⭐';
+            target.style.width = `${currentConfig.targetSize}px`;
+            target.style.height = `${currentConfig.targetSize}px`;
+
+            const maxX = gameContainer.clientWidth - currentConfig.targetSize;
+            const maxY = gameContainer.clientHeight - currentConfig.targetSize;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            target.style.left = `${randomX}px`;
+            target.style.top = `${randomY}px`;
+
+            gameContainer.appendChild(target);
+            gameState.targets.push(target);
+
+            setTimeout(() => removeTarget(target), currentConfig.targetSpeed);
+        }
+
+        function removeTarget(target) {
+            if (target.parentNode === gameContainer) {
+                gameContainer.removeChild(target);
+                gameState.targets = gameState.targets.filter(t => t !== target);
+                gameState.combo = 0;
+            }
+        }
+
+        function showComboText(x, y, text) {
+            const comboText = document.createElement('div');
+            comboText.className = 'combo-text';
+            comboText.style.left = `${x}px`;
+            comboText.style.top = `${y}px`;
+            comboText.textContent = text;
+            gameContainer.appendChild(comboText);
+            setTimeout(() => comboText.remove(), 1000);
+        }
+
+        // Touch and mouse handling
+        let isDragging = false;
+
+        function moveHero(x, y) {
+            const bounds = gameContainer.getBoundingClientRect();
+            const heroSize = hero.offsetWidth;
+            
+            let newX = x - bounds.left - heroSize / 2;
+            let newY = y - bounds.top - heroSize / 2;
+
+            newX = Math.max(0, Math.min(newX, bounds.width - heroSize));
+            newY = Math.max(0, Math.min(newY, bounds.height - heroSize));
+
+            hero.style.left = `${newX}px`;
+            hero.style.top = `${newY}px`;
+
+            checkCollisions();
+        }
+
+        function checkCollisions() {
+            const heroRect = hero.getBoundingClientRect();
+            
+            gameState.targets.forEach(target => {
+                const targetRect = target.getBoundingClientRect();
+                
+                if (isColliding(heroRect, targetRect)) {
+                    handleCollision(target);
+                }
+            });
+        }
+
+        function handleCollision(target) {
+            const now = Date.now();
+            if (now - gameState.lastTargetTime < 500) {
+                gameState.combo++;
+                const comboBonus = Math.min(gameState.combo * 10, 50);
+                gameState.score += comboBonus;
+                showComboText(
+                    parseInt(target.style.left),
+                    parseInt(target.style.top),
+                    `Combo x${gameState.combo}! +${comboBonus}`
+                );
+            } else {
+                gameState.combo = 1;
+                gameState.score += 10;
+            }
+            gameState.lastTargetTime = now;
+
+            gameState.timeLeft += currentConfig.timeBonus;
+            removeTarget(target);
+            updateUI();
+            
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+
+            if (Math.random() < 0.1) {
+                createPowerup();
+            }
+
+            createTarget();
+        }
+
+        function createPowerup() {
+            const powerup = document.createElement('div');
+            powerup.className = 'powerup';
+            powerup.innerHTML = '⚡';
+            powerup.style.background = '#FFD700';
+
+            const maxX = gameContainer.clientWidth - 40;
+            const maxY = gameContainer.clientHeight - 40;
+            powerup.style.left = `${Math.random() * maxX}px`;
+            powerup.style.top = `${Math.random() * maxY}px`;
+
+            gameContainer.appendChild(powerup);
+            gameState.powerups.push(powerup);
+
+            setTimeout(() => {
+                if (powerup.parentNode === gameContainer) {
+                    gameContainer.removeChild(powerup);
+                    gameState.powerups = gameState.powerups.filter(p => p !== powerup);
+                }
+            }, 5000);
+        }
+
+        function isColliding(rect1, rect2) {
+            return !(rect1.right < rect2.left || 
+                    rect1.left > rect2.right || 
+                    rect1.bottom < rect2.top || 
+                    rect1.top > rect2.bottom);
+        }
+
+        function updateUI() {
+            scoreElement.textContent = `Score: ${gameState.score}`;
+            timeLeftElement.textContent = `Time: ${gameState.timeLeft}s`;
+            highScoreElement.textContent = `Best: ${gameState.highScore}`;
+        }
+
+        function clearTargets() {
+            gameState.targets.forEach(target => {
+                if (target.parentNode === gameContainer) {
+                    gameContainer.removeChild(target);
+                }
+            });
+            gameState.targets = [];
+        }
+
+        // Event listeners for touch and mouse
+        hero.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            moveHero(e.clientX, e.clientY);
+            e.preventDefault();
+        });
+
+        document.addEventListener('pointermove', (e) => {
+            if (isDragging) {
+                moveHero(e.clientX, e.clientY);
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('pointerup', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('pointercancel', () => {
+            isDragging = false;
+        });
+
+        // Prevent default touch behaviors
+        document.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+        document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+        // Game loop
+        function gameLoop() {
+            if (gameState.gameActive) {
+                // Spawn new targets if needed
+                if (gameState.targets.length < currentConfig.maxTargets) {
+                    if (Math.random() < 0.1) { // 10% chance each frame
+                        createTarget();
+                    }
+                }
+
+                // Check powerup collisions
+                const heroRect = hero.getBoundingClientRect();
+                gameState.powerups.forEach(powerup => {
+                    const powerupRect = powerup.getBoundingClientRect();
+                    if (isColliding(heroRect, powerupRect)) {
+                        collectPowerup(powerup);
+                    }
+                });
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        function collectPowerup(powerup) {
+            gameContainer.removeChild(powerup);
+            gameState.powerups = gameState.powerups.filter(p => p !== powerup);
+            
+            // Random powerup effect
+            const effects = [
+                () => { gameState.timeLeft += 5; showComboText(hero.offsetLeft, hero.offsetTop, "+5 seconds!"); },
+                () => { gameState.score += 50; showComboText(hero.offsetLeft, hero.offsetTop, "+50 points!"); },
+                () => {
+                    const oldSize = currentConfig.targetSize;
+                    currentConfig.targetSize += 20;
+                    setTimeout(() => { currentConfig.targetSize = oldSize; }, 5000);
+                    showComboText(hero.offsetLeft, hero.offsetTop, "Bigger targets!");
+                }
+            ];
+            
+            const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+            randomEffect();
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([50, 50, 50]);
+            }
+            
+            updateUI();
+        }
+
+        // Handle window resize
+        function handleResize() {
+            // Clear all targets and powerups
+            clearTargets();
+            gameState.powerups.forEach(powerup => {
+                if (powerup.parentNode === gameContainer) {
+                    gameContainer.removeChild(powerup);
+                }
+            });
+            gameState.powerups = [];
+            
+            // Reset hero position
+            hero.style.left = '50%';
+            hero.style.top = '50%';
+            
+            // Recreate targets if game is active
+            if (gameState.gameActive) {
+                createTarget();
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && gameState.gameActive) {
+                gameState.timeLeft = Math.max(0, gameState.timeLeft - 5);
+                updateUI();
+            }
+        });
+
+        // Initialize high score from localStorage
+        function initializeGame() {
+            const savedHighScore = localStorage.getItem('highScore');
+            if (savedHighScore) {
+                gameState.highScore = parseInt(savedHighScore);
+                highScoreElement.textContent = `Best: ${gameState.highScore}`;
+            }
+
+            // Add difficulty descriptions
+            const difficultyDescriptions = {
+                easy: "Larger targets, more time bonuses",
+                normal: "Balanced gameplay",
+                hard: "Smaller targets, faster pace"
+            };
+
+            document.querySelectorAll('#startScreen button').forEach(button => {
+                const mode = button.id.replace('Mode', '').toLowerCase();
+                const description = document.createElement('span');
+                description.style.fontSize = '14px';
+                description.style.opacity = '0.8';
+                description.style.display = 'block';
+                description.textContent = difficultyDescriptions[mode];
+                button.appendChild(description);
+            });
+        }
+
+        // Start the game loop
+        gameLoop();
+        initializeGame();
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('highScore', gameState.highScore.toString());
+        });
+
+        // Prevent zooming on double tap for touch devices
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

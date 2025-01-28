@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Star, Video, Book, Award } from 'lucide-react';
+
+const SignLanguageGame = () => {
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [score, setScore] = useState(0);
+  const [gameMode, setGameMode] = useState('learn'); // learn, practice, story
+
+  const lessonWords = [
+    { word: 'Hello', difficulty: 1 },
+    { word: 'Friend', difficulty: 1 },
+    { word: 'Thank you', difficulty: 1 },
+    { word: 'Family', difficulty: 2 },
+    { word: 'School', difficulty: 2 }
+  ];
+
+  const storyMissions = [
+    {
+      title: "First Day at School",
+      description: "Help Alex meet new friends using sign language!",
+      requiredWords: ['Hello', 'Friend', 'Thank you']
+    },
+    {
+      title: "Family Dinner",
+      description: "Join a family gathering and learn family-related signs",
+      requiredWords: ['Family', 'Thank you', 'Friend']
+    }
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto p-4">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center space-x-2">
+          <h1 className="text-3xl font-bold">Sign It!</h1>
+          <Star className="text-yellow-400" size={24} />
+        </div>
+        <div className="flex items-center space-x-4">
+          <span className="text-lg">Level: {currentLevel}</span>
+          <span className="text-lg">Score: {score}</span>
+        </div>
+      </div>
+
+      {/* Mode Selection */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <Card 
+          className={`cursor-pointer ${gameMode === 'learn' ? 'border-blue-500 border-2' : ''}`}
+          onClick={() => setGameMode('learn')}
+        >
+          <CardContent className="flex flex-col items-center p-6">
+            <Book size={32} className="mb-2" />
+            <h3 className="font-semibold">Learn Mode</h3>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className={`cursor-pointer ${gameMode === 'practice' ? 'border-blue-500 border-2' : ''}`}
+          onClick={() => setGameMode('practice')}
+        >
+          <CardContent className="flex flex-col items-center p-6">
+            <Video size={32} className="mb-2" />
+            <h3 className="font-semibold">Practice Mode</h3>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className={`cursor-pointer ${gameMode === 'story' ? 'border-blue-500 border-2' : ''}`}
+          onClick={() => setGameMode('story')}
+        >
+          <CardContent className="flex flex-col items-center p-6">
+            <Award size={32} className="mb-2" />
+            <h3 className="font-semibold">Story Mode</h3>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Content Area */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>
+            {gameMode === 'learn' && "Today's Lessons"}
+            {gameMode === 'practice' && 'Practice Your Skills'}
+            {gameMode === 'story' && 'Story Missions'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {gameMode === 'learn' && (
+            <div className="space-y-4">
+              {lessonWords
+                .filter(lesson => lesson.difficulty <= currentLevel)
+                .map((lesson, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <span className="font-medium">{lesson.word}</span>
+                    <Button variant="outline">Start Learning</Button>
+                  </div>
+                ))}
+            </div>
+          )}
+
+          {gameMode === 'practice' && (
+            <div className="text-center p-8">
+              <Video size={48} className="mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Practice Mode</h3>
+              <p className="mb-4">Practice signs using your device's camera!</p>
+              <Button className="mx-auto">Start Practice Session</Button>
+            </div>
+          )}
+
+          {gameMode === 'story' && (
+            <div className="space-y-4">
+              {storyMissions.map((mission, index) => (
+                <Card key={index} className="p-4">
+                  <h3 className="font-semibold mb-2">{mission.title}</h3>
+                  <p className="text-gray-600 mb-2">{mission.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {mission.requiredWords.map((word, i) => (
+                      <span key={i} className="px-2 py-1 bg-blue-100 rounded-full text-sm">
+                        {word}
+                      </span>
+                    ))}
+                  </div>
+                  <Button className="mt-4">Start Mission</Button>
+                </Card>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default SignLanguageGame;
